@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Hesap Kodu</th>
+                <th>Borç</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% function renderTable(data, prefix) { %>
+                <% Object.keys(data).forEach(key => { %>
+                    <tr>
+                        <td>
+                            <button onclick="toggleVisibility('<%= prefix %><%= key %>')">+</button> <%= prefix %><%= key %>
+                        </td>
+                        <td><%= data[key].borc %></td>
+                    </tr>
+                    <% if (Object.keys(data[key].children).length > 0) { %>
+                        <tr class="<%= prefix %><%= key %> hidden">
+                            <td colspan="2">
+                                <table>
+                                    <tbody>
+                                        <%= renderTable(data[key].children, prefix + key + '.') %>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% }) %>
+            <% } %>
+            <%= renderTable(data, '') %>
+        </tbody>
+    </table>
+    <script>
+        function toggleVisibility(className) {
+            var rows = document.getElementsByClassName(className);
+            var button = document.querySelector(`button[onclick="toggleVisibility('${className}')"]`);
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].classList.contains('hidden')) {
+                    rows[i].classList.remove('hidden');
+                    button.textContent = '-';
+                } else {
+                    rows[i].classList.add('hidden');
+                    button.textContent = '+';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
