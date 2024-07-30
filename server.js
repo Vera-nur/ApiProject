@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
@@ -8,7 +7,7 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -18,14 +17,13 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
     try {
-        const result = await pool.query('SELECT hesap_kodu, borc FROM hesaplar');
+        const result = await pool.query('SELECT hesap_kodu, borc FROM hesaplar'); // Tablo adı hesaplar olmalı
         const data = {};
 
         result.rows.forEach(row => {
