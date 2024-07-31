@@ -16,11 +16,31 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
 });
+const createTableQuery = `
+CREATE TABLE IF NOT EXISTS hesaplar (
+    hesap_kodu VARCHAR(255) PRIMARY KEY,
+    borc NUMERIC
+);
+`;
+
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 console.log("kontrol")
 app.use(bodyParser.json());
+
+async function createTable() {
+    try {
+        await pool.query(createTableQuery);
+        console.log('Table created successfully');
+    } catch (err) {
+        console.error('Error creating table:', err);
+    }
+}
+
+// Uygulama başlatıldığında tabloyu oluştur
+createTable();
 
 app.get('/', async (req, res) => {
     try {
