@@ -38,6 +38,33 @@ async function createTable() {
 
 createTable();
 
+async function checkDbConnection() {
+    try {
+        const client = await pool.connect();
+        console.log('Database connected successfully');
+        client.release();
+    } catch (err) {
+        console.error('Database connection error:', err);
+    }
+}
+
+checkDbConnection();
+
+async function checkTable() {
+    try {
+        const result = await pool.query("SELECT * FROM information_schema.tables WHERE table_name='hesaplar'");
+        if (result.rows.length > 0) {
+            console.log('Table exists');
+        } else {
+            console.log('Table does not exist');
+        }
+    } catch (err) {
+        console.error('Error checking table:', err);
+    }
+}
+
+checkTable();
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json());
