@@ -19,6 +19,7 @@ const pool = new Pool({
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+console.log("kontrol")
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
