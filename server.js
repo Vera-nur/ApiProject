@@ -50,6 +50,7 @@ app.get('/', async (req, res) => {
         result.rows.forEach(row => {
             const keys = row.hesap_kodu.split('.');
             let currentLevel = data;
+            console.log("debneme");
             keys.forEach((key, index) => {
                 if (!currentLevel[key]) {
                     currentLevel[key] = { borc: 0, children: {} };
@@ -59,6 +60,7 @@ app.get('/', async (req, res) => {
                 }
                 currentLevel = currentLevel[key].children;
             });
+            console.log("dogru calısma kontrol");
         });
 
         // Borçları üst seviyeye taşıma
