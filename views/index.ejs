@@ -31,27 +31,6 @@
             </tr>
         </thead>
         <tbody>
-            <% function renderTable(data, prefix) { %>
-                <% Object.keys(data).forEach(key => { %>
-                    <tr>
-                        <td>
-                            <button onclick="toggleVisibility('<%= prefix %><%= key %>')">+</button> <%= prefix %><%= key %>
-                        </td>
-                        <td><%= data[key].borc %></td>
-                    </tr>
-                    <% if (Object.keys(data[key].children).length > 0) { %>
-                        <tr class="<%= prefix %><%= key %> hidden">
-                            <td colspan="2">
-                                <table>
-                                    <tbody>
-                                        <%= renderTable(data[key].children, prefix + key + '.') %>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    <% } %>
-                <% }) %>
-            <% } %>
             <%= renderTable(data, '') %>
         </tbody>
     </table>

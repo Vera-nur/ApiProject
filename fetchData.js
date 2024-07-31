@@ -3,7 +3,6 @@ const axios = require('axios');
 const { Pool } = require('pg');
 const https = require('https');
 
-// Sertifika doğrulamasını atlamak için HTTPS Agent oluşturma
 const agent = new https.Agent({
     rejectUnauthorized: false
 });
@@ -18,7 +17,6 @@ const pool = new Pool({
 
 async function fetchData() {
     try {
-        // Token alma
         const tokenResponse = await axios.post(process.env.TOKEN_URL, {}, {
             auth: {
                 username: process.env.API_USER,
@@ -27,12 +25,11 @@ async function fetchData() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            httpsAgent: agent // HTTPS Agent ekleme
+            httpsAgent: agent
         });
 
         const token = tokenResponse.data.response.token;
 
-        // Veri çekme
         const dataResponse = await axios.patch(process.env.DATA_URL, {
             fieldData: {},
             script: 'getData'
@@ -41,12 +38,11 @@ async function fetchData() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            httpsAgent: agent // HTTPS Agent ekleme
+            httpsAgent: agent
         });
 
         const data = JSON.parse(dataResponse.data.response.scriptResult);
-        
-        // Gelen verileri kontrol etmek için konsola yazdırma
+
         console.log('API Response Data:', data);
 
         const client = await pool.connect();
@@ -56,7 +52,6 @@ async function fetchData() {
             for (const item of data) {
                 const { hesap_kodu, borc, alacak } = item;
 
-                // Boş değerleri kontrol ederek null olarak ayarlama
                 const borcValue = borc !== '' ? borc : null;
                 const alacakValue = alacak !== '' ? alacak : null;
 
@@ -78,4 +73,4 @@ async function fetchData() {
     }
 }
 
-fetchData();
+module.exports = fetchData;
